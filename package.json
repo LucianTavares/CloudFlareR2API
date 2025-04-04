@@ -2,14 +2,14 @@
   "name": "r2upload",
   "version": "1.0.0",
   "description": "API que irá enviar arquivos de Backup para o CloudFlare R2 compativel com S3 SDK.",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "type": "module",
   "scripts": {
     "clean": "rimraf ./dist",
     "dev": "concurrently \"npm run watch-compile\" \"npm run wait-and-watch\"",
     "watch-compile": "swc src -w --out-dir dist",
-    "wait-and-watch": "wait-on dist/src/index.js && npm run watch-dev",
-    "watch-dev": "nodemon --watch \"dist/**/*\" -e js dist/src/index.js",
+    "wait-and-watch": "wait-on dist/src/server.js && npm run watch-dev",
+    "watch-dev": "nodemon --watch \"dist/**/*\" -e js dist/src/server.js",
     "build": "npm run clean && swc src -d dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

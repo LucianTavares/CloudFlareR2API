@@ -17,45 +17,45 @@ export const S3 = new S3Client({
 
 const bucket = process.env.R2_BUCKET;
 
-export const listaDeBuckets = async () => {
-  const command = new ListBucketsCommand({});
-  const response = await S3.send(command);
-  return response.Buckets;
-};
+// export const listaDeBuckets = async () => {
+//   const command = new ListBucketsCommand({});
+//   const response = await S3.send(command);
+//   return response.Buckets;
+// };
 
-export const listarArquivos = async (nomePasta: string) => {
-  const params = {
-    Bucket: bucket,
-    Prefix: `Backup/${nomePasta}/`
-  };
+// export const listarArquivos = async (nomePasta: string) => {
+//   const params = {
+//     Bucket: bucket,
+//     Prefix: `Backup/${nomePasta}/`
+//   };
 
-  try {
-    const listaPastas = new ListObjectsV2Command(params);
-    const data = await S3.send(listaPastas);
+//   try {
+//     const listaPastas = new ListObjectsV2Command(params);
+//     const data = await S3.send(listaPastas);
 
-    const arquivos = data.Contents?.map((arquivo) => ({
-      Key: arquivo.Key?.split('/')[2],
-      Size: arquivo.Size
-    })) || [];
-    return arquivos;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
+//     const arquivos = data.Contents?.map((arquivo) => ({
+//       Key: arquivo.Key?.split('/')[2],
+//       Size: arquivo.Size
+//     })) || [];
+//     return arquivos;
+//   } catch (error) {
+//     console.error(error);
+//     return [];
+//   }
+// }
 
-export const upload = (nomePasta: string) => multer({
-  storage: multerS3({
-    s3: S3,
-    bucket: bucket!,
-    key: (req, file, cb) => {
-      cb(null, `Backup/${nomePasta}/${file.originalname}`);
-    }
-  }),
-  limits: {
-    fileSize: 2 * 1024 * 1024 * 1024
-  }
-});
+// export const upload = (nomePasta: string) => multer({
+//   storage: multerS3({
+//     s3: S3,
+//     bucket: bucket!,
+//     key: (req, file, cb) => {
+//       cb(null, `Backup/${nomePasta}/${file.originalname}`);
+//     }
+//   }),
+//   limits: {
+//     fileSize: 2 * 1024 * 1024 * 1024
+//   }
+// });
 
 export const downloadArquivo = async (nomePasta: string, nomeArquivo: string) => {
   const params = {
@@ -87,4 +87,4 @@ export const criarPasta = async (nomePasta: string) => {
   }
 }
 
-export const uploadArquivo = (nomePasta: string) => upload(nomePasta).single('file');
+// export const uploadArquivo = (nomePasta: string) => upload(nomePasta).single('file');

@@ -1,0 +1,3 @@
+
+### Fazer download de um arquivo
+GET http://localhost:3005/download-arquivo?nomePasta=Intime&nomeArquivo=Intime-20250401-160538-diferencial-LaRepublica-agendado.nbk
