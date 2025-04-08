@@ -1,5 +1,5 @@
 import { GetObjectCommand, ListBucketsCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
-import { S3 } from "./cloudFlareR2.js";
+import { S3 } from "../utils/cloud/cloudflareR2Client.js";
 import multerS3 from 'multer-s3';
 import multer from "multer";
 import { Readable } from "stream";
@@ -41,8 +41,7 @@ export const listaDeArquivos = async (params: InputListaDeArquivos) => {
     })) || [];
     return arquivos;
   } catch (error) {
-    console.error(error);
-    return [];
+    throw new Error('Failed to list files');
   }
 }
 
@@ -62,7 +61,6 @@ export const uploadArquivo = async (params: InputUpload) => {
     });
     return upload;
   } catch (error) {
-    console.error(error);
     throw new Error("Error uploading file");
   }
 }
@@ -80,7 +78,6 @@ export const downloadArquivo = async (params: InputDownload) => {
     const stream = data.Body as Readable;
     return stream;
   } catch (error) {
-    console.error("Error downloading file:", error);
     throw new Error("Error downloading file");
   }
 }

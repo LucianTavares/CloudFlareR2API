@@ -11,7 +11,7 @@
     "wait-and-watch": "wait-on dist/src/server.js && npm run watch-dev",
     "watch-dev": "nodemon --watch \"dist/**/*\" -e js dist/src/server.js",
     "build": "npm run clean && swc src -d dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage --runInBand"
   },
   "keywords": [
     "Express",
@@ -27,15 +27,20 @@
   "devDependencies": {
     "@swc/cli": "^0.6.0",
     "@swc/core": "^1.11.11",
+    "@swc/jest": "^0.2.37",
     "@types/express-session": "^1.18.1",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/multer": "^1.4.12",
     "@types/multer-s3": "^3.0.3",
     "@types/node": "^22.13.10",
     "@types/request": "^2.48.12",
     "concurrently": "^9.1.2",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.9",
     "rimraf": "^6.0.1",
+    "supertest": "^7.1.0",
+    "ts-jest": "^29.3.1",
     "typescript": "^5.8.2",
     "wait-on": "^8.0.3"
   },
