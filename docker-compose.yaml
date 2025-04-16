@@ -1,14 +1,72 @@
 services:
   
-  storage:
-    build: .
-    container_name: storage
-    entrypoint: ./start.sh
+  # storage:
+  #   build: .
+  #   container_name: storage
+  #   entrypoint: ./start.sh
+  #   restart: always
+  #   volumes:
+  #     - ./:/home/intime/app
+  #   environment:
+  #     - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+  #     - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+  #     - R2_BUCKET=${R2_BUCKET}
+  #     - R2_ENDPOINT=${R2_ENDPOINT}
+  #   depends_on:
+  #     db: 
+  #       condition: service_healthy
+
+  # backup:
+  #   build:
+  #     context: ./backup-users-keycloak
+  #     dockerfile: Dockerfile
+  #   container_name: backup
+  #   volumes:
+  #     - ./backups:/home/backup/backups
+  #   environment:
+  #     - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+  #     - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+  #     - R2_BUCKET=${R2_BUCKET}
+  #     - R2_ENDPOINT=${R2_ENDPOINT}
+  #     - POSTGRES_HOST=db
+  #     - POSTGRES_DB=keycloak
+  #     - POSTGRES_USER=root
+  #     - POSTGRES_PASSWORD=root
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   restart: "no"
+
+  keycloak:
+    image: keycloak/keycloak:21.1
+    container_name: keycloak
+    command: start-dev  
     restart: always
-    volumes:
-      - ./:/home/intime/app
+    ports:
+      - 8080:8080
     environment:
-      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
-      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
-      - R2_BUCKET=${R2_BUCKET}
-      - R2_ENDPOINT=${R2_ENDPOINT}
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://db:5432/keycloak
+      - KC_DB_USERNAME=root
+      - KC_DB_PASSWORD=root
+    depends_on:
+      db: 
+        condition: service_healthy
+
+  db:
+    image: postgres:17-alpine
+    container_name: postgres
+    volumes:
+      - ./.docker/dbdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=keycloak
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d keycloak"]
+      interval: 10s
+      timeout: 10s
+      retries: 3

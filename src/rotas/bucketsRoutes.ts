@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { keycloak } from "../config/keycloack.js";
+import { keycloak } from "../config/keycloak.js";
 import { BucketController } from "../controllers/BucketController.js";
 
 const router = Router();
